@@ -1,0 +1,55 @@
+<body>
+<video id="inputVideo" width="400" height="300" autoplay loop>
+</video>
+<canvas id="drawCanvas" width="400" height="300"></canvas>
+
+
+<script src="gumwrapper.min.js"></script>
+<script src="clmtrackr.min.js"></script>
+
+
+
+<script>
+// gets user's webcam
+  (function() {
+      function showSuccess(video) {
+          console.log('Hey, it works! Dimensions: ' + video.videoWidth + ' x ' + video.videoHeight);
+      }
+      function showError(error) {
+          alert('Oops: ' + error.message);
+      }
+      var gum = new GumWrapper({video: 'inputVideo'}, showSuccess, showError);
+      gum.play();
+  })();
+</script>
+
+
+<script type="text/javascript">
+// make the tracker
+  var videoInput = document.getElementById('inputVideo');
+  
+  var ctracker = new clm.tracker();
+  ctracker.init();
+  ctracker.start(videoInput);
+
+  function positionLoop() {
+    requestAnimationFrame(positionLoop);
+    var positions = ctracker.getCurrentPosition();
+    // positions = [[x_0, y_0], [x_1,y_1], ... ]
+    // do something with the positions ...
+  }
+  positionLoop();
+
+  var canvasInput = document.getElementById('drawCanvas');
+  var cc = canvasInput.getContext('2d');
+  function drawLoop() {
+    requestAnimationFrame(drawLoop);
+    cc.clearRect(0, 0, canvasInput.width, canvasInput.height);
+    ctracker.draw(canvasInput);
+  }
+  drawLoop();
+
+
+</script>
+<body>
+
