@@ -7,9 +7,10 @@
 <script src="gumwrapper.min.js"></script>
 <script src="clmtrackr.min.js"></script>
 
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script>
+
 // gets user's webcam
   (function() {
       function showSuccess(video) {
@@ -25,7 +26,9 @@
 
 
 <script type="text/javascript">
-// make the tracker
+
+
+  // make the tracker
   var videoInput = document.getElementById('inputVideo');
   
   var ctracker = new clm.tracker();
@@ -35,6 +38,9 @@
   function positionLoop() {
     requestAnimationFrame(positionLoop);
     var positions = ctracker.getCurrentPosition();
+    var userData = {name: userName, face: positions}
+    callAjax("/datasend", JSON.stringify(userData)) 
+    console.log(positions)
     // positions = [[x_0, y_0], [x_1,y_1], ... ]
     // do something with the positions ...
   }
@@ -49,7 +55,23 @@
   }
   drawLoop();
 
+  // make calls with their stuff
+  function callAjax(url, data){
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: data,
+    });
+  }
 
+  // get usename
+  var userName = prompt("username:");
+  if (!userName) {
+    username = "default"
+  }
 </script>
+
+
+
 <body>
 

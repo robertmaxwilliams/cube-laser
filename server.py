@@ -4,12 +4,17 @@
 # run as follows:
 #    python simple-https-server.py
 # then in your browser, visit:
-#    https://localhost:4443
+#    https://localhost:4437
 
 import BaseHTTPServer, SimpleHTTPServer
 import ssl
 
 httpd = BaseHTTPServer.HTTPServer(('0.0.0.0', 443), SimpleHTTPServer.SimpleHTTPRequestHandler)
-httpd.socket = ssl.wrap_socket (httpd.socket, certfile='/etc/letsencrypt/live/cubelasers.com/fullchain.pem', keyfile='/etc/letsencrypt/keys/0000_key-certbot.pem', server_side=True)
+try:
+	httpd.socket = ssl.wrap_socket (httpd.socket, certfile='/etc/letsencrypt/live/cubelasers.com/fullchain.pem', keyfile='/etc/letsencrypt/keys/0000_key-certbot.pem', server_side=True)
+except IOError:
+	print("real cert/key not found, using dummy cert")
+	httpd.socket = ssl.wrap_socket (httpd.socket, certfile='dummycert.pem', keyfile='dummykey.pem', server_side=True)
+
 httpd.serve_forever()
 
