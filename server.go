@@ -11,6 +11,11 @@ import (
 var results []string
 var names []string
 var userSet = make(map[string]bool)
+type UserData struct {
+	x, y, z, rx, ry, rz float64
+	
+}
+var users = make(map[string]UserData[])
 
 func addUser(userName string){
 	_, exists := userSet[userName]
@@ -35,7 +40,8 @@ func processUserData(userJSON string) { // the data recieved from server
 	userMap, ok := userData.(map[string]interface{})
 	// conditionally add to set-like array of usernames
 	if ok {
-	addUser(userMap["name"].(string))
+		addUser(userMap["name"].(string))
+		users[userMap["name"]] = userMap["coords"].(UserData)
 	}
 }
 
